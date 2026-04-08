@@ -11,13 +11,13 @@ state = env.reset()
 # -------------------------
 app = FastAPI()
 
-@app.post("/reset")
+@app.post("/openenv/reset")
 def reset_env():
     global state
     state = env.reset()
     return state
 
-@app.post("/step")
+@app.post("/openenv/step")
 def step_env(action: int = 2):
     global state
     state, reward, done, info = env.step(action)
