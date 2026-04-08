@@ -2,7 +2,9 @@ import gradio as gr
 from env import Env
 from fastapi import FastAPI
 
+# -------------------------
 # Initialize
+# -------------------------
 env = Env()
 state = env.reset()
 
@@ -25,7 +27,7 @@ def step_env(action: int = 2):
         "state": state,
         "reward": reward,
         "done": done,
-        "status": info["status"]
+        "status": info.get("status", "ok")  # safe access
     }
 
 # -------------------------
@@ -36,17 +38,17 @@ def run_step(action):
     state, reward, done, info = env.step(action)
 
     return (
-        state["soil_moisture"],
-        state["weather"],
+        state.get("soil_moisture", 0),
+        state.get("weather", "unknown"),
         reward,
-        info["status"]
+        info.get("status", "ok")
     )
 
 with gr.Blocks() as demo:
     gr.Markdown("# 🌱 Smart Irrigation RL")
 
     action_input = gr.Dropdown(
-        choices=[0,1,2,3],
+        choices=[0, 1, 2, 3],
         label="Select Irrigation Level",
         value=2
     )
@@ -64,4 +66,8 @@ with gr.Blocks() as demo:
         outputs=[output1, output2, output3, output4]
     )
 
-demo.launch()
+# -------------------------
+# 🔥 IMPORTANT FIX
+# -------------------------
+# Mount Gradio inside FastAPI (NO demo.launch())
+app = gr.mount_gradio_app(app, demo, path="/")
