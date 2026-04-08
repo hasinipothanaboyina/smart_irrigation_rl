@@ -1,12 +1,38 @@
 import gradio as gr
 from env import Env
+from fastapi import FastAPI
 
+# Initialize
 env = Env()
 state = env.reset()
 
+# -------------------------
+# 🌐 FASTAPI (Backend API)
+# -------------------------
+app = FastAPI()
+
+@app.post("/reset")
+def reset_env():
+    global state
+    state = env.reset()
+    return state
+
+@app.post("/step")
+def step_env(action: int = 2):
+    global state
+    state, reward, done, info = env.step(action)
+    return {
+        "state": state,
+        "reward": reward,
+        "done": done,
+        "status": info["status"]
+    }
+
+# -------------------------
+# 🎨 GRADIO UI
+# -------------------------
 def run_step(action):
     global state
-
     state, reward, done, info = env.step(action)
 
     return (
@@ -31,13 +57,11 @@ with gr.Blocks() as demo:
     output4 = gr.Textbox(label="Status")
 
     btn = gr.Button("Run Step")
-    
 
     btn.click(
         fn=run_step,
         inputs=[action_input],
         outputs=[output1, output2, output3, output4]
     )
-
 
 demo.launch()
