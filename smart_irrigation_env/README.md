@@ -1,5 +1,4 @@
 ---
----
 title: Smart Irrigation RL
 emoji: 🌱
 colorFrom: green
@@ -8,20 +7,7 @@ sdk: gradio
 app_file: app.py
 pinned: false
 ---
----
 
-# Smart Irrigation RL Environment
+# Smart Irrigation using Reinforcement Learning
 
-## Problem
-Farmers often overwater or underwater crops.
-
-## Solution
-We built an AI-based irrigation system using reinforcement learning to maintain optimal soil moisture.
-
-## Features
-- Smart water control
-- Weather-based decisions
-- Reward-based optimization
-
-## Run
-python env.py
+This is a demo project.
